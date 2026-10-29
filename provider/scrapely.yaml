@@ -1,0 +1,33 @@
+identity:
+  author: scrapely
+  name: scrapely
+  label:
+    en_US: Scrape.ly
+  description:
+    en_US: Scrape websites and run Scrape.ly Actors and tasks, then use their results in your workflows and agents.
+  icon: icon.svg
+  tags:
+    - search
+    - utilities
+credentials_for_provider:
+  scrapely_api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: Scrape.ly API key
+    placeholder:
+      en_US: scrapely_...
+    help:
+      en_US: Create an API key in the Scrape.ly dashboard under Settings → API & Integrations.
+    url: https://my.scrape.ly/settings/api
+tools:
+  - tools/scrape_website.yaml
+  - tools/run_actor.yaml
+  - tools/run_task.yaml
+  - tools/start_run.yaml
+  - tools/get_run.yaml
+  - tools/get_dataset_items.yaml
+  - tools/search_actors.yaml
+extra:
+  python:
+    source: provider/scrapely.py

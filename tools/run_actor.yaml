@@ -1,0 +1,42 @@
+identity:
+  name: run_actor
+  author: scrapely
+  label:
+    en_US: Run Actor
+description:
+  human:
+    en_US: Run a Scrape.ly Actor with your input, wait for it to finish (up to 5 minutes) and return its results.
+  llm: Runs a Scrape.ly Actor (a ready-made scraper) with a JSON input and returns the items it scraped.
+parameters:
+  - name: actor_id
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Actor
+    human_description:
+      en_US: The Actor ID or username/actor-name, as shown on the Actor's page in Scrape.ly.
+    llm_description: The Actor to run, as an ID or username/actor-name.
+  - name: input
+    type: string
+    required: false
+    form: llm
+    label:
+      en_US: Input (JSON)
+    human_description:
+      en_US: 'The Actor input as a JSON object, for example {"startUrls": [{"url": "https://example.com"}]}. Leave empty to use the Actor''s defaults.'
+    llm_description: The Actor input as a JSON object string. Leave empty for the Actor's defaults.
+  - name: max_items
+    type: number
+    required: false
+    default: 100
+    min: 1
+    max: 1000
+    form: form
+    label:
+      en_US: Max items
+    human_description:
+      en_US: The most results to return.
+extra:
+  python:
+    source: tools/run_actor.py

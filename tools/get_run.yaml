@@ -1,0 +1,33 @@
+identity:
+  name: get_run
+  author: scrapely
+  label:
+    en_US: Get run
+description:
+  human:
+    en_US: Check a run's status, optionally waiting up to 60 seconds for it to finish.
+  llm: Returns a Scrape.ly run's status (READY, RUNNING, SUCCEEDED, FAILED, ABORTED or TIMED-OUT) and its dataset_id. Once it SUCCEEDED, read the results with Get dataset items.
+parameters:
+  - name: run_id
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Run ID
+    human_description:
+      en_US: The run ID, for example from Start run.
+    llm_description: The ID of the run to check.
+  - name: wait_seconds
+    type: number
+    required: false
+    default: 0
+    min: 0
+    max: 60
+    form: form
+    label:
+      en_US: Wait (seconds)
+    human_description:
+      en_US: Wait up to this many seconds for the run to finish before answering (0 = answer at once).
+extra:
+  python:
+    source: tools/get_run.py

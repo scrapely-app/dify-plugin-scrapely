@@ -1,0 +1,33 @@
+identity:
+  name: search_actors
+  author: scrapely
+  label:
+    en_US: Search Actors
+description:
+  human:
+    en_US: Find ready-made scrapers (Actors) in the Scrape.ly Store by keyword.
+  llm: Searches the Scrape.ly Store for Actors (ready-made scrapers) matching keywords, for example "google maps" or "linkedin jobs". Returns each Actor's ID, name and description; use the ID with Run Actor or Start run.
+parameters:
+  - name: query
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Search
+    human_description:
+      en_US: Keywords, for example "google maps" or "amazon products".
+    llm_description: Keywords describing the website or data to scrape.
+  - name: limit
+    type: number
+    required: false
+    default: 10
+    min: 1
+    max: 50
+    form: form
+    label:
+      en_US: Limit
+    human_description:
+      en_US: The most Actors to return.
+extra:
+  python:
+    source: tools/search_actors.py

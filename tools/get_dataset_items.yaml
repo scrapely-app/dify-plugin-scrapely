@@ -1,0 +1,43 @@
+identity:
+  name: get_dataset_items
+  author: scrapely
+  label:
+    en_US: Get dataset items
+description:
+  human:
+    en_US: Read the results stored in a Scrape.ly dataset, for example from an earlier run.
+  llm: Returns the items stored in a Scrape.ly dataset, given its ID.
+parameters:
+  - name: dataset_id
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Dataset
+    human_description:
+      en_US: The dataset ID or username/dataset-name. A run's results are in its default dataset.
+    llm_description: The dataset to read, as an ID or username/dataset-name.
+  - name: limit
+    type: number
+    required: false
+    default: 100
+    min: 1
+    max: 1000
+    form: form
+    label:
+      en_US: Limit
+    human_description:
+      en_US: The most items to return.
+  - name: offset
+    type: number
+    required: false
+    default: 0
+    min: 0
+    form: form
+    label:
+      en_US: Offset
+    human_description:
+      en_US: How many items to skip from the start.
+extra:
+  python:
+    source: tools/get_dataset_items.py

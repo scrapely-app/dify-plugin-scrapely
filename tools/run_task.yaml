@@ -1,0 +1,42 @@
+identity:
+  name: run_task
+  author: scrapely
+  label:
+    en_US: Run task
+description:
+  human:
+    en_US: Run a saved Scrape.ly task, wait for it to finish (up to 5 minutes) and return its results.
+  llm: Runs a saved Scrape.ly task (an Actor with a saved input) and returns the items it scraped.
+parameters:
+  - name: task_id
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Task
+    human_description:
+      en_US: The task ID or username/task-name, as shown on the task's page in Scrape.ly.
+    llm_description: The saved task to run, as an ID or username/task-name.
+  - name: input
+    type: string
+    required: false
+    form: llm
+    label:
+      en_US: Input override (JSON)
+    human_description:
+      en_US: Fields that replace the task's saved input, as a JSON object. Leave empty to use the saved input.
+    llm_description: Fields that override the task's saved input, as a JSON object string. Usually empty.
+  - name: max_items
+    type: number
+    required: false
+    default: 100
+    min: 1
+    max: 1000
+    form: form
+    label:
+      en_US: Max items
+    human_description:
+      en_US: The most results to return.
+extra:
+  python:
+    source: tools/run_task.py

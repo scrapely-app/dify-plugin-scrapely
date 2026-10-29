@@ -1,0 +1,31 @@
+identity:
+  name: start_run
+  author: scrapely
+  label:
+    en_US: Start run
+description:
+  human:
+    en_US: Start an Actor run without waiting for it, for runs that take longer than 5 minutes. Check it with Get run.
+  llm: Starts a Scrape.ly Actor run with a JSON input and returns at once with the run ID and status. Use Get run to check it, then Get dataset items with its dataset_id for the results.
+parameters:
+  - name: actor_id
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Actor
+    human_description:
+      en_US: The Actor ID or username/actor-name, as shown on the Actor's page in Scrape.ly.
+    llm_description: The Actor to run, as an ID or username/actor-name.
+  - name: input
+    type: string
+    required: false
+    form: llm
+    label:
+      en_US: Input (JSON)
+    human_description:
+      en_US: The Actor input as a JSON object. Leave empty to use the Actor's defaults.
+    llm_description: The Actor input as a JSON object string. Leave empty for the Actor's defaults.
+extra:
+  python:
+    source: tools/start_run.py

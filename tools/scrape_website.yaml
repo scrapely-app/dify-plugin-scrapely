@@ -1,0 +1,33 @@
+identity:
+  name: scrape_website
+  author: scrapely
+  label:
+    en_US: Scrape website
+description:
+  human:
+    en_US: Scrape a web page (and optionally the pages it links to) into clean text and markdown.
+  llm: Scrapes the web page at the given URL and returns its title, text and markdown. Use it to read the content of a website.
+parameters:
+  - name: url
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: URL
+    human_description:
+      en_US: The web page to scrape, for example https://example.com.
+    llm_description: The full URL of the web page to scrape, starting with http:// or https://.
+  - name: max_pages
+    type: number
+    required: false
+    default: 1
+    min: 1
+    max: 20
+    form: form
+    label:
+      en_US: Max pages
+    human_description:
+      en_US: How many pages of the site to scrape, following links from the URL (1 = only that page).
+extra:
+  python:
+    source: tools/scrape_website.py
