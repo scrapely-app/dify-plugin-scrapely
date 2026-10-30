@@ -2,6 +2,7 @@
 
 import json
 import os
+import time
 from typing import Any
 from urllib.parse import quote
 
@@ -9,11 +10,15 @@ import requests
 
 # SCRAPELY_API_URL points a local debug run at another environment (e.g. staging).
 API_URL = os.environ.get("SCRAPELY_API_URL", "https://api.scrape.ly").rstrip("/")
+# Bump with the version in manifest.yaml.
 USER_AGENT = "dify-plugin-scrapely/0.0.1"
 
-# Sync runs wait at most 300 s on the server; the HTTP timeout leaves room for the response.
-SYNC_HTTP_TIMEOUT = 330
 DEFAULT_HTTP_TIMEOUT = 60
+# The API holds a request open at most 45 s, so a run is started and then
+# polled until it finishes, for up to RUN_WAIT_SECS (main.py allows 360 s).
+POLL_WAIT_SECS = 45
+RUN_WAIT_SECS = 300
+FINISHED_STATUSES = {"SUCCEEDED", "FAILED", "ABORTED", "TIMED-OUT"}
 MAX_ITEMS_LIMIT = 1000
 
 # Scrapes one website into title, text and markdown (Scrape website tool).
@@ -80,14 +85,31 @@ def whole_number(value: Any, name: str, default: int, minimum: int, maximum: int
         return default
     try:
         number = int(float(value))
-    except (TypeError, ValueError) as e:
+    except (TypeError, ValueError, OverflowError) as e:
         raise ScrapelyError(f"{name} must be a whole number.") from e
     return max(minimum, min(maximum, number))
 
 
-def run_sync(token: str, path: str, run_input: dict, max_items: int) -> list:
+def run_and_wait(token: str, path: str, run_input: dict, max_items: int) -> list:
     """Run an Actor or task, wait for it (up to 5 minutes) and return its results."""
-    items = call(token, "POST", f"{path}/run-sync-get-dataset-items", params={"limit": max_items, "clean": "true"}, body=run_input, timeout=SYNC_HTTP_TIMEOUT)
+    run = (call(token, "POST", f"{path}/runs", body=run_input) or {}).get("data") or {}
+    run_id = run.get("id")
+    if not run_id:
+        raise ScrapelyError("Scrape.ly did not return the started run.")
+    deadline = time.monotonic() + RUN_WAIT_SECS
+    while run.get("status") not in FINISHED_STATUSES:
+        left = int(deadline - time.monotonic())
+        if left <= 0:
+            raise ScrapelyError(
+                f"Run {run_id} is still running after 5 minutes. Check it with Get run, "
+                f"then read its results with Get dataset items (dataset {run.get('defaultDatasetId')})."
+            )
+        wait = min(POLL_WAIT_SECS, left)
+        run = (call(token, "GET", f"/v2/actor-runs/{run_id}", params={"waitForFinish": wait}, timeout=DEFAULT_HTTP_TIMEOUT + wait) or {}).get("data") or {}
+    if run.get("status") != "SUCCEEDED":
+        message = run.get("statusMessage")
+        raise ScrapelyError(f"Run {run_id} {run.get('status')}{f': {message}' if message else ''}")
+    items = call(token, "GET", f"/v2/datasets/{run.get('defaultDatasetId')}/items", params={"limit": max_items, "clean": "true"})
     return items if isinstance(items, list) else []
 
 

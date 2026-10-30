@@ -5,7 +5,7 @@ identity:
     en_US: Get run
 description:
   human:
-    en_US: Check a run's status, optionally waiting up to 60 seconds for it to finish.
+    en_US: Check a run's status, optionally waiting up to 45 seconds for it to finish.
   llm: Returns a Scrape.ly run's status (READY, RUNNING, SUCCEEDED, FAILED, ABORTED or TIMED-OUT) and its dataset_id. Once it SUCCEEDED, read the results with Get dataset items.
 parameters:
   - name: run_id
@@ -22,7 +22,7 @@ parameters:
     required: false
     default: 0
     min: 0
-    max: 60
+    max: 45
     form: form
     label:
       en_US: Wait (seconds)

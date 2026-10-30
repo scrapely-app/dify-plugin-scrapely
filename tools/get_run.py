@@ -4,13 +4,13 @@ from typing import Any
 from dify_plugin import Tool
 from dify_plugin.entities.tool import ToolInvokeMessage
 
-from tools.scrapely_api import DEFAULT_HTTP_TIMEOUT, call, resource_id, run_summary, whole_number
+from tools.scrapely_api import DEFAULT_HTTP_TIMEOUT, POLL_WAIT_SECS, call, resource_id, run_summary, whole_number
 
 
 class GetRunTool(Tool):
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage, None, None]:
         run = resource_id(tool_parameters.get("run_id"), "run_id")
-        wait = whole_number(tool_parameters.get("wait_seconds"), "wait_seconds", 0, 0, 60)
+        wait = whole_number(tool_parameters.get("wait_seconds"), "wait_seconds", 0, 0, POLL_WAIT_SECS)
         res = call(
             self.runtime.credentials.get("scrapely_api_key", ""),
             "GET",

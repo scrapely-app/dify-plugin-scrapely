@@ -5,7 +5,7 @@
 ## Setup
 
 1. Create an API key in the [Scrape.ly dashboard](https://my.scrape.ly/settings/api) under **Settings → API & Integrations**.
-2. In Dify, open **Plugins → Scrape.ly → Authorize** and paste the key.
+2. In Dify, open **Integrations → Tools**, select Scrape.ly, and add the key as its credentials.
 
 ## Tools
 
@@ -15,7 +15,7 @@
 | **Run Actor** | Runs an Actor with a JSON input, waits for it to finish and returns its results. |
 | **Run task** | Runs a saved task (optionally overriding its input) and returns its results. |
 | **Start run** | Starts an Actor run without waiting, for runs that take longer than 5 minutes. |
-| **Get run** | Checks a run's status, optionally waiting up to 60 seconds for it to finish. |
+| **Get run** | Checks a run's status, optionally waiting up to 45 seconds for it to finish. |
 | **Get dataset items** | Reads the results stored in a dataset, for example from an earlier run. |
 | **Search Actors** | Finds ready-made scrapers (Actors) in the Scrape.ly Store by keyword. |
 
